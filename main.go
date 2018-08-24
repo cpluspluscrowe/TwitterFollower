@@ -43,7 +43,7 @@ func TweetUsersFirstTweet(userId int64) {
 	if err != nil {
 		panic(err)
 	}
-	firstTweetId := tweets[0].ID
+	firstTweetId := tweets[2].ID
 	client.Statuses.Retweet(firstTweetId, &twitter.StatusRetweetParams{})
 }
 
