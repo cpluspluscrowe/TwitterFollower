@@ -41,7 +41,7 @@ func followUsers(toSearchFor string) {
 	client := getTwitterClient()
 	search, _, err := client.Search.Tweets(&twitter.SearchTweetParams{
 		Query: toSearchFor,
-		Count: 1,
+		Count: 10,
 	})
 	if err != nil {
 		fmt.Println(err)
@@ -60,6 +60,7 @@ func followUsers(toSearchFor string) {
 				follow(user.ScreenName, client)
 				fmt.Println("Followed User! ", user, isUserMyFriend(user.UserID))
 				users = append(users, user)
+				return
 			} else {
 				fmt.Println("You are already following user: ", user)
 			}
