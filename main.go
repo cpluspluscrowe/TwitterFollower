@@ -6,6 +6,7 @@ import (
 	"github.com/dghubble/oauth1"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -16,26 +17,28 @@ func doEvery(d time.Duration, f func()) {
 }
 
 func main() {
-	doEvery(500000*time.Millisecond, followUserRounds)
+	followUserRounds()
+	doEvery(2000000*time.Millisecond, followUserRounds)
 }
 
 func followUserRounds() {
-	//	followUsers("Python")
 	followUsers("#Golang")
-	//	followUsers("C++")
-	//	followUsers("Kotlin")
-	//	followUsers("Scala")
-	//	followUsers("Java")
+	followUsers("#Kotlin")
+	followUsers("#Scala")
+	followUsers("#C++")
+	followUsers("#Java")
 }
 
 func followUsers(toSearchFor string) {
 	client := getTwitterClient()
 	search, _, err := client.Search.Tweets(&twitter.SearchTweetParams{
 		Query: toSearchFor,
-		Count: 20,
+		Count: 1,
 	})
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		time.Sleep(300 * time.Second)
+		return
 	}
 
 	var users []UserEntity
@@ -65,7 +68,9 @@ func follow(user string, client *twitter.Client) {
 		Follow:     addrTrue(),
 	})
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		time.Sleep(300 * time.Second)
+		return
 	}
 }
 
@@ -101,13 +106,20 @@ func GetTweets(highlight string) {
 
 func Search(look4 string) {
 	twitterClient := getTwitterClient()
-	search, resp, err := twitterClient.Search.Tweets(&twitter.SearchTweetParams{
-		Query: "Golang",
+	search, _, err := twitterClient.Search.Tweets(&twitter.SearchTweetParams{
+		Query: look4,
 	})
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(search, resp, err)
+	for _, tweet := range search.Statuses {
+		tweet_id := tweet.ID
+		text := tweet.Text
+		if strings.Contains(text, look4) {
+			twitterClient.Statuses.Retweet(tweet_id, &twitter.StatusRetweetParams{})
+		}
+		break
+	}
 }
 
 func getClient() *http.Client {
