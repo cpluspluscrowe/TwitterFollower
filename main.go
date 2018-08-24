@@ -10,23 +10,31 @@ import (
 	"time"
 )
 
-func doEvery(d time.Duration, f func()) {
+func doEvery(d time.Duration, f func(string), arg string) {
 	for _ = range time.Tick(d) {
-		f()
+		f(arg)
 	}
 }
 
 func main() {
-	followUserRounds()
-	doEvery(2000000*time.Millisecond, followUserRounds)
+	doEvery(20000*time.Millisecond, followUserRounds, "#Golang")
 }
 
-func followUserRounds() {
-	followUsers("#Golang")
-	followUsers("#Kotlin")
+func followUserRounds(search4 string) {
+	followUsers(search4)
+	/*followUsers("#Kotlin")
 	followUsers("#Scala")
 	followUsers("#C++")
-	followUsers("#Java")
+	followUsers("#Java")*/
+}
+
+func isUserMyFriend(userId int64) bool {
+	client := getTwitterClient()
+	relationship, _, err := client.Friendships.Show(&twitter.FriendshipShowParams{TargetID: userId})
+	if err != nil {
+		panic(err)
+	}
+	return relationship.Source.Following
 }
 
 func followUsers(toSearchFor string) {
@@ -48,9 +56,13 @@ func followUsers(toSearchFor string) {
 				ScreenName: element.User.ScreenName,
 				UserID:     element.User.ID,
 			}
-			follow(user.ScreenName, client)
-			fmt.Println(user)
-			users = append(users, user)
+			if !isUserMyFriend(user.UserID) {
+				follow(user.ScreenName, client)
+				fmt.Println("Followed User! ", user, isUserMyFriend(user.UserID))
+				users = append(users, user)
+			} else {
+				fmt.Println("You are already following user: ", user)
+			}
 		}
 	}
 	fmt.Println()
