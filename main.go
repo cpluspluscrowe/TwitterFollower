@@ -37,6 +37,16 @@ func isUserMyFriend(userId int64) bool {
 	return relationship.Source.Following
 }
 
+func TweetUsersFirstTweet(userId int64) {
+	client := getTwitterClient()
+	tweets, _, err := client.Timelines.UserTimeline(&twitter.UserTimelineParams{UserID: userId})
+	if err != nil {
+		panic(err)
+	}
+	firstTweetId := tweets[0].ID
+	client.Statuses.Retweet(firstTweetId, &twitter.StatusRetweetParams{})
+}
+
 func followUsers(toSearchFor string) {
 	client := getTwitterClient()
 	search, _, err := client.Search.Tweets(&twitter.SearchTweetParams{
@@ -60,6 +70,7 @@ func followUsers(toSearchFor string) {
 				follow(user.ScreenName, client)
 				fmt.Println("Followed User! ", user, isUserMyFriend(user.UserID))
 				users = append(users, user)
+				TweetUsersFirstTweet(user.UserID)
 				return
 			} else {
 				fmt.Println("You are already following user: ", user)
