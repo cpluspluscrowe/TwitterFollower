@@ -17,15 +17,15 @@ func doEvery(d time.Duration, f func(string), arg string) {
 }
 
 func main() {
-	doEvery(20000*time.Millisecond, followUserRounds, "#Golang")
+	doEvery(1500000*time.Millisecond, followUserRounds, "#Golang")
+	doEvery(2000000*time.Millisecond, followUserRounds, "#Scala")
+	doEvery(3000000*time.Millisecond, followUserRounds, "#C++")
+	doEvery(4000000*time.Millisecond, followUserRounds, "#Java")
+	doEvery(4000000*time.Millisecond, followUserRounds, "#PhD")
 }
 
 func followUserRounds(search4 string) {
 	followUsers(search4)
-	/*followUsers("#Kotlin")
-	followUsers("#Scala")
-	followUsers("#C++")
-	followUsers("#Java")*/
 }
 
 func isUserMyFriend(userId int64) bool {
