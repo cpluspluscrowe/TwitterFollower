@@ -17,11 +17,11 @@ func doEvery(d time.Duration, f func(string), arg string) {
 }
 
 func main() {
-	doEvery(1500000*time.Millisecond, followUserRounds, "#Golang")
-	doEvery(2000000*time.Millisecond, followUserRounds, "#Scala")
-	doEvery(3000000*time.Millisecond, followUserRounds, "#C++")
-	doEvery(4000000*time.Millisecond, followUserRounds, "#Java")
-	doEvery(4000000*time.Millisecond, followUserRounds, "#PhD")
+	doEvery(1507*time.Second, followUserRounds, "#Golang")
+	doEvery(2126*time.Second, followUserRounds, "#Scala")
+	doEvery(3125*time.Second, followUserRounds, "#C++")
+	doEvery(4124*time.Second, followUserRounds, "#Java")
+	doEvery(5123*time.Second, followUserRounds, "#PhD")
 }
 
 func followUserRounds(search4 string) {
